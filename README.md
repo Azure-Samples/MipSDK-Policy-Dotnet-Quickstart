@@ -4,7 +4,7 @@ languages:
 - csharp
 products:
 - azure
-description: "This sample application demonstrates using the Microsoft Information Protection SDK .NET wrapper to label and read a label from a file."
+description: "This sample application demonstrates using the Microsoft Information Protection SDK .NET wrapper to compute actions given labeling option inputs."
 urlFragment: MipSdk-Dotnet-Policy-Quickstart
 ---
 
