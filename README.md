@@ -5,10 +5,10 @@ languages:
 products:
 - azure
 description: "This sample application demonstrates using the Microsoft Information Protection SDK .NET wrapper to label and read a label from a file."
-urlFragment: MipSdk-Dotnet-File-Quickstart
+urlFragment: MipSdk-Dotnet-Policy-Quickstart
 ---
 
-# MipSdk-Dotnet-File-Quickstart
+# MipSdk-Dotnet-Policy-Quickstart
 
 This sample application demonstrates using the Microsoft Information Protection SDK .NET wrapper to compute actions for a given label. 
 
