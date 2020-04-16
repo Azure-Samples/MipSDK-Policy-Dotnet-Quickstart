@@ -104,8 +104,7 @@ namespace MipSdk_Dotnet_Policy_Quickstart
 
                 // Initialize file profile settings to create/use local state.                
                 var profileSettings = new PolicyProfileSettings(mipContext, 
-                    CacheStorageType.OnDiskEncrypted, 
-                    authDelegate);
+                    CacheStorageType.OnDiskEncrypted);
 
                 // Use MIP.LoadFileProfileAsync() providing settings to create IFileProfile. 
                 // IFileProfile is the root of all SDK operations for a given application.
@@ -133,7 +132,7 @@ namespace MipSdk_Dotnet_Policy_Quickstart
 
             // Create file settings object. Passing in empty string for the first parameter, engine ID, will cause the SDK to generate a GUID.
             // Locale settings are supported and should be provided based on the machine locale, particular for client applications.
-            var engineSettings = new PolicyEngineSettings("", "", "en-US")
+            var engineSettings = new PolicyEngineSettings("", authDelegate, "", "en-US")
             {
                 // Provide the identity for service discovery.
                 Identity = identity

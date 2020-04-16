@@ -46,7 +46,7 @@ namespace MipSdk_Dotnet_Policy_Quickstart
             return _executionStateOptions.contentIdentifier;
         }
 
-        public override List<KeyValuePair<string, string>> GetContentMetadata(List<string> names, List<string> namePrefixes)
+        public override List<MetadataEntry> GetContentMetadata(List<string> names, List<string> namePrefixes)
         {
             Dictionary<string, string> filteredMetadata = new Dictionary<string, string>();
 
@@ -68,11 +68,11 @@ namespace MipSdk_Dotnet_Policy_Quickstart
                 filteredMetadata.Add(name, value);
             }
 
-            List<KeyValuePair<string, string>> result = new List<KeyValuePair<string, string>>();
+            List<MetadataEntry> result = new List<MetadataEntry>(); 
 
             foreach(var item in filteredMetadata)
             {
-                result.Add(new KeyValuePair<string, string>(item.Key, item.Value));
+                result.Add(new MetadataEntry(item.Key, item.Value, 0));
             }
 
             return result;
