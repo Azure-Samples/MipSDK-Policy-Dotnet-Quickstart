@@ -131,8 +131,9 @@ namespace MipSdk_Dotnet_Policy_Quickstart
             }
 
             // Create file settings object. Passing in empty string for the first parameter, engine ID, will cause the SDK to generate a GUID.
+            // Passing in a email address or other unique value helps to ensure that the cached engine is loaded each time for the same user.
             // Locale settings are supported and should be provided based on the machine locale, particular for client applications.
-            var engineSettings = new PolicyEngineSettings("", authDelegate, "", "en-US")
+            var engineSettings = new PolicyEngineSettings(identity.Email, authDelegate, "", "en-US")
             {
                 // Provide the identity for service discovery.
                 Identity = identity
