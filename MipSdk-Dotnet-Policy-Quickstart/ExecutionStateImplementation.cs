@@ -65,7 +65,10 @@ namespace MipSdk_Dotnet_Policy_Quickstart
             {
                 string value = string.Empty;
                 var itName = _executionStateOptions.metadata.TryGetValue(name, out value);
-                filteredMetadata.Add(name, value);
+                if (value != null)
+                {
+                    filteredMetadata.Add(name, value);
+                }
             }
 
             List<MetadataEntry> result = new List<MetadataEntry>(); 
@@ -87,7 +90,7 @@ namespace MipSdk_Dotnet_Policy_Quickstart
         {
             return _executionStateOptions.assignmentMethod;
         }
-
+        
         public override ProtectionDescriptor GetProtectionDescriptor()
         {
             return new ProtectionDescriptor(_executionStateOptions.templateId);
@@ -96,7 +99,7 @@ namespace MipSdk_Dotnet_Policy_Quickstart
         /// <summary>
         ///  The UPE SDK will always notify client of 'JUSTIFY', 'METADATA', and 'REMOVE*' actions. However an application can
         ///  choose not to support specific actions that may appear in a policy. (For instance, A policy may define a label to
-        ///  require both protection and a watermark, but the application could decide not to support watermarks by not
+        ///  require both protection and a watermark, bcut the application could decide not to support watermarks by not
         ///  including ADD_WATERMARK here. If that were the case, 'mip::PolicyEngine::ComputeActions' would never return
         ///  AddWatermark actions.)
         /// </summary>
@@ -109,7 +112,9 @@ namespace MipSdk_Dotnet_Policy_Quickstart
                 ActionType.ProtectByTemplate |
                 ActionType.ProtectDoNotForward |
                 ActionType.RemoveProtection |
-                ActionType.Justify;
+                ActionType.Justify |
+                ActionType.RecommendLabel |
+                ActionType.ApplyLabel;                
         }
 
         public override bool IsDowngradeJustified(out string justificationMessage)
