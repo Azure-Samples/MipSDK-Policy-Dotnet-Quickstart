@@ -21,7 +21,7 @@ namespace MipSdk_Dotnet_Policy_Quickstart
         public AssignmentMethod assignmentMethod;
         public bool isDowngradeJustified;
         public string templateId;
-        public ContentFormat contentFormat;
+        public string contentFormat;
         public ActionType supportedActions;
         public bool generateAuditEvent;
         public string downgradeJustification;
@@ -36,7 +36,7 @@ namespace MipSdk_Dotnet_Policy_Quickstart
             _executionStateOptions = executionStateOptions;
         }
 
-        public override ContentFormat GetContentFormat()
+        public override string GetContentFormat()
         {
             return _executionStateOptions.contentFormat;
         }
@@ -75,7 +75,7 @@ namespace MipSdk_Dotnet_Policy_Quickstart
 
             foreach(var item in filteredMetadata)
             {
-                result.Add(new MetadataEntry(item.Key, item.Value, 0));
+                result.Add(new MetadataEntry(item.Key, item.Value, new MetadataVersion(0, MetadataVersionFormat.DEFAULT)));
             }
 
             return result;

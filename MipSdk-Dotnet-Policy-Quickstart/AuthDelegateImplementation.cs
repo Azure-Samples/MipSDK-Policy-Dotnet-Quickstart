@@ -32,7 +32,6 @@ using System.Threading.Tasks;
 
 using Microsoft.InformationProtection;
 using Microsoft.Identity.Client;
-using Microsoft.Identity.Client.Cache;
 using System.Linq;
 
 namespace MipSdk_Dotnet_Policy_Quickstart
@@ -52,30 +51,6 @@ namespace MipSdk_Dotnet_Policy_Quickstart
         // As of the 1.7 release, the two services backing the MIP SDK, RMS and MIP Sync Service, provide resources instead of scopes.
         // The List<string> entities below will be used to map the resources to scopes and to pass those scopes to Azure AD via MSAL.
 
-        /// <summary>
-        /// Delegated scopes for Azure RMS.
-        /// </summary>
-        private List<string> aadrmScopes = new List<string>()
-        {
-            "https://aadrm.com/user_impersonation" // Delegated API permission, valid for public client applications.             
-        };
-
-        /// <summary>
-        /// Delegated scope for the Microsoft Information Protection Sync Service.
-        /// </summary>
-        private List<string> syncServiceScopes = new List<string>()
-        {
-            "https://psor.o365syncservice.com/UnifiedPolicy.User.Read" // Delegated API permission, allows policy sync for authenticated user.            
-        };
-
-        /// <summary>
-        /// Delegated permission for Graph. This is *not* required by MIP SDK and is used only in this sample app.
-        /// </summary>
-        List<string> graphScope = new List<string>()
-        {
-            "https://graph.microsoft.com/User.Read" // Graph scope for triggering sign in for user identity discovery.            
-        };
-
         public AuthDelegateImplementation(ApplicationInfo appInfo)
         {
             this.appInfo = appInfo;
@@ -94,8 +69,8 @@ namespace MipSdk_Dotnet_Policy_Quickstart
         /// <param name="resource"></param>
         /// <returns>The OAuth2 token for the user</returns>
         public string AcquireToken(Identity identity, string authority, string resource, string claims)
-        {            
-                return AcquireTokenAsync(identity, authority, resource, claims, isMultitenantApp).Result.AccessToken;            
+        {
+            return AcquireTokenAsync(authority, resource, claims, isMultitenantApp).Result.AccessToken;
         }
 
         /// <summary>
@@ -107,7 +82,7 @@ namespace MipSdk_Dotnet_Policy_Quickstart
         /// <param name="resource"></param>
         /// <param name="claims"></param>
         /// <returns></returns>
-        public async Task<AuthenticationResult> AcquireTokenAsync(Identity identity, string authority, string resource, string claims, bool isMultiTenantApp = false)
+        public async Task<AuthenticationResult> AcquireTokenAsync(string authority, string resource, string claims, bool isMultiTenantApp = true)
         {
             AuthenticationResult result = null;
 
@@ -121,30 +96,19 @@ namespace MipSdk_Dotnet_Policy_Quickstart
             {
                 if (authority.ToLower().Contains("common"))
                 {
-                    authority = authority.Remove(authority.Length - 6, 6);
+                    var authorityUri = new Uri(authority);
+                    authority = String.Format("https://{0}/{1}", authorityUri.Host, tenant);
                 }
                 _app = PublicClientApplicationBuilder.Create(appInfo.ApplicationId)
-                    .WithAuthority(authority + tenant)
+                    .WithAuthority(authority)
                     .WithDefaultRedirectUri()
                     .Build();
 
             }
             var accounts = (_app.GetAccountsAsync()).GetAwaiter().GetResult();
 
-            List<string> scopes = new List<string>();
-
-            if (resource.ToLower().Contains("aadrm"))
-            {
-                scopes = aadrmScopes;
-            }
-            else if (resource.ToLower().Contains("graph"))
-            {
-                scopes = graphScope;
-            }
-            else
-            {
-                scopes = syncServiceScopes;
-            }
+            // Append .default to the resource passed in to AcquireToken().
+            string[] scopes = new string[] { resource[resource.Length - 1].Equals('/') ? $"{resource}.default" : $"{resource}/.default" };
 
             try
             {
@@ -174,7 +138,7 @@ namespace MipSdk_Dotnet_Policy_Quickstart
         /// <returns>Microsoft.InformationProtection.Identity</returns>
         public Identity GetUserIdentity()
         {
-            AuthenticationResult result = AcquireTokenAsync(null, "https://login.microsoftonline.com/common", "https://graph.microsoft.com", null).Result;
+            AuthenticationResult result = AcquireTokenAsync("https://login.microsoftonline.com/common", "https://graph.microsoft.com", null).Result;
             return new Identity(result.Account.Username);
         }
     }

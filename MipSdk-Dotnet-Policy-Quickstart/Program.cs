@@ -65,7 +65,7 @@ namespace MipSdk_Dotnet_Policy_Quickstart
             options.newLabel = action.GetLabelById(currentLabelId);
             options.actionSource = ActionSource.Manual;
             options.assignmentMethod = AssignmentMethod.Standard;
-            options.contentFormat = Microsoft.InformationProtection.Policy.ContentFormat.Default;
+            options.contentFormat = Microsoft.InformationProtection.Policy.ContentFormat.File;
             options.contentIdentifier = "MyTestFile.pptx";
             options.dataState = DataState.Use;
             options.isDowngradeJustified = false;
