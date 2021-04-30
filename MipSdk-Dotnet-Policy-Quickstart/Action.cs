@@ -280,7 +280,7 @@ namespace MipSdk_Dotnet_Policy_Quickstart
                 // Get labels from the engine and return.
                 // For a user principal, these will be user specific.
                 // For a service principal, these may be service specific or global.
-                return engine.ListSensitivityLabels();          
+                return engine.ListSensitivityLabels();           
         }         
 
         public Label GetLabelById(string labelId)
