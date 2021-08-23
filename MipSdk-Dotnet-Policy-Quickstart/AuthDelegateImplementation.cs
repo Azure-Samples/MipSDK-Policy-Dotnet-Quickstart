@@ -38,8 +38,7 @@ namespace MipSdk_Dotnet_Policy_Quickstart
 {
     public class AuthDelegateImplementation : IAuthDelegate
     {
-        // Set the redirect URI from the AAD Application Registration.
-        private static readonly string redirectUri = ConfigurationManager.AppSettings["ida:RedirectUri"];
+        // Set the redirect URI from the AAD Application Registration.        
         private static readonly bool isMultitenantApp = Convert.ToBoolean(ConfigurationManager.AppSettings["ida:IsMultitenantApp"]);
         private static readonly string tenant = ConfigurationManager.AppSettings["ida:TenantGuid"];
         private ApplicationInfo appInfo;

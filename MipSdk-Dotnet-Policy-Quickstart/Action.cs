@@ -67,8 +67,13 @@ namespace MipSdk_Dotnet_Policy_Quickstart
             authDelegate = new AuthDelegateImplementation(this.appInfo);
 
             // Initialize SDK DLLs. If DLLs are missing or wrong type, this will throw an exception
-
             MIP.Initialize(MipComponent.Policy);
+
+            // Create MipConfiguration Object
+            MipConfiguration mipConfiguration = new MipConfiguration(appInfo, "mip_data", LogLevel.Trace, false);
+
+            // Create MipContext using MipConfiguration
+            mipContext = MIP.CreateMipContext(mipConfiguration);
 
             // This method in AuthDelegateImplementation triggers auth against Graph so that we can get the user ID.
             var id = authDelegate.GetUserIdentity();
@@ -81,13 +86,15 @@ namespace MipSdk_Dotnet_Policy_Quickstart
         }
 
         /// <summary>
-        /// Null refs to engine and profile and release all MIP resources.
-        /// </summary>
-        ~Action()
+        /// Unload engine, null refs to engine and profile and release all MIP resources.
+        /// </summary>        
+        public void Dispose()
         {
-            engine = null;
-            profile = null;
-            mipContext = null; 
+            profile.UnloadEngineAsync(engine.Settings.Id).Wait();
+            engine.Dispose();
+            profile.Dispose();
+            mipContext.ShutDown();
+            mipContext.Dispose();
         }
 
         /// <summary>
@@ -99,18 +106,14 @@ namespace MipSdk_Dotnet_Policy_Quickstart
         /// <returns></returns>
         private IPolicyProfile CreatePolicyProfile(ApplicationInfo appInfo, ref AuthDelegateImplementation authDelegate)
         {
-            // Initialize MipContext
-            mipContext = MIP.CreateMipContext(appInfo, "mip_data", LogLevel.Trace, null, null);
+            // Initialize file profile settings to create/use local state.                
+            var profileSettings = new PolicyProfileSettings(mipContext,
+                CacheStorageType.OnDiskEncrypted);
 
-                // Initialize file profile settings to create/use local state.                
-                var profileSettings = new PolicyProfileSettings(mipContext, 
-                    CacheStorageType.OnDiskEncrypted);
-
-                // Use MIP.LoadFileProfileAsync() providing settings to create IFileProfile. 
-                // IFileProfile is the root of all SDK operations for a given application.
-                var profile = Task.Run(async () => await MIP.LoadPolicyProfileAsync(profileSettings)).Result;
-                return profile;
-            
+            // Use MIP.LoadFileProfileAsync() providing settings to create IFileProfile. 
+            // IFileProfile is the root of all SDK operations for a given application.
+            var profile = Task.Run(async () => await MIP.LoadPolicyProfileAsync(profileSettings)).Result;
+            return profile;
         }
 
         /// <summary>
