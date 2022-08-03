@@ -3,12 +3,13 @@ page_type: sample
 languages:
 - csharp
 products:
-- azure
+- m365
+- office-365
 description: "This sample application demonstrates using the Microsoft Information Protection SDK .NET wrapper to compute actions given labeling option inputs."
-urlFragment: MipSdk-Dotnet-Policy-Quickstart
+urlFragment: MipSDK-Policy-Dotnet-Quickstart
 ---
 
-# MipSdk-Dotnet-Policy-Quickstart
+# MipSDK-Policy-Dotnet-Quickstart
 
 This sample application demonstrates using the Microsoft Information Protection SDK .NET wrapper to compute actions for a given label. 
 
